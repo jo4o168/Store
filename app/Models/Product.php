@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Product extends Model
+class Product extends BaseModel
 {
-    //
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'sku',
+        'category_id',
+    ];
 }
