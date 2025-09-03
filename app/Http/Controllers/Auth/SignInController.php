@@ -17,5 +17,4 @@ class SignInController extends Controller
     {
         $this->signInService->run($request->validated());
     }
-    //teste push
 }
