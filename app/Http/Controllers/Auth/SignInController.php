@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SignInRequest;
 use App\Http\Services\Auth\SignInService;
-use Illuminate\Http\Request;
 
 class SignInController extends Controller
 {
@@ -13,8 +12,10 @@ class SignInController extends Controller
     {
 
     }
+
     public function __invoke(SignInRequest $request): void
     {
         $this->signInService->run($request->validated());
     }
+    //teste push
 }
