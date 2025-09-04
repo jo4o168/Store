@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\ProductController;
+namespace App\Http\Services\Product;
 
 use App\Http\Filters\Filter\DefaultFilter;
 use App\Models\Product;

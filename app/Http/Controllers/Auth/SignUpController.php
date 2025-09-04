@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Helpers\HttpResponse;
+use App\Http\Requests\Auth\SignUpRequest;
+use App\Http\Services\Auth\SignUpService;
+use Illuminate\Http\JsonResponse;
 
 class SignUpController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request)
+    public function __construct(private readonly SignUpService $signUpService)
     {
-        //
+
+    }
+
+
+    public function __invoke(SignUpRequest $request): JsonResponse
+    {
+        $result = $this->signUpService->run($request->validated());
+        return HttpResponse::created($result);
     }
 }

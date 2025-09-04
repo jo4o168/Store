@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Products;
+namespace App\Http\Requests\Product;
 
 use App\Http\Requests\BaseRequest;
 
@@ -10,9 +10,9 @@ class StoreProductRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string'],
-            'description' => ['sometimes', 'string'],
+            'description' => ['sometimes', 'nullable', 'string'],
             'sku' => ['required', 'string'],
-            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'category_id' => ['required', 'integer', 'exists:product_categories,id'],
         ];
     }
 }
