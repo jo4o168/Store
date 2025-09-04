@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponse;
 use App\Http\Requests\Auth\SignInRequest;
 use App\Http\Services\Auth\SignInService;
+use Illuminate\Http\JsonResponse;
 
 class SignInController extends Controller
 {
@@ -13,8 +15,9 @@ class SignInController extends Controller
 
     }
 
-    public function __invoke(SignInRequest $request): void
+    public function __invoke(SignInRequest $request): JsonResponse
     {
-        $this->signInService->run($request->validated());
+        $result = $this->signInService->run($request->validated());
+        return HttpResponse::ok($result);
     }
 }

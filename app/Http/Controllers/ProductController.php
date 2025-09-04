@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Enum\Permissions;
 use App\Http\Filters\Filter\DefaultFilter;
 use App\Http\Helpers\HttpResponse;
-use App\Http\Requests\Products\StoreProductRequest;
+use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Services\Product\ListProductService;
 use App\Http\Services\Product\StoreProductService;
 use App\Models\Product;
