@@ -18,7 +18,7 @@ class SignUpController extends Controller
 
     public function __invoke(SignUpRequest $request): JsonResponse
     {
-        $result = $this->signUpService->run($request->validated());
-        return HttpResponse::created($result);
+        $this->signUpService->run($request->validated());
+        return HttpResponse::created([]);
     }
 }

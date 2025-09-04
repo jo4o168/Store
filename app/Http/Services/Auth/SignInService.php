@@ -3,25 +3,19 @@
 namespace App\Http\Services\Auth;
 
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class SignInService
 {
-    public function run(array $data): JsonResponse
+    public function run(array $data): array
     {
-        $user = User::where('email', $data['email'])->first();
-
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            return abort(400, 'Invalid credentials');
+        if (!Auth::attempt($data)) {
+            abort(401);
         }
+        $user = User::query()->select('id', 'name')->find(Auth::id());
+        $accessToken = $user->createToken('auth_token')->plainTextToken;
+        return compact('accessToken', 'user');
 
-        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
     }
 }
