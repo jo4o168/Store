@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property bool $master
+ * @property UserPermission $userPermission
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -16,10 +21,16 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'roles',
+        'master',
         'remember_token',
     ];
 
     protected $casts = [
         'roles' => 'json',
     ];
+
+    public function userPermissions(): HasOne
+    {
+        return $this->hasOne(UserPermission::class);
+    }
 }

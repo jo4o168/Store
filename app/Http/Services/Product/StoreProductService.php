@@ -6,8 +6,8 @@ use App\Models\Product;
 
 class StoreProductService
 {
-    public function run(array $data): array
+    public function run(array $data): void
     {
-        return Product::create($data);
+        Product::create($data);
     }
 }
