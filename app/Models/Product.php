@@ -7,8 +7,10 @@ class Product extends BaseModel
     protected $fillable = [
         'name',
         'description',
-        'image',
-        'sku',
-        'category_id',
+        'type',
+        'stock',
+        'price',
+        'active',
+        'contact_id',
     ];
 }
