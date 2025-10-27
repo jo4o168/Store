@@ -32,14 +32,12 @@ ProductController extends Controller
 
     public function index(DefaultFilter $filter): JsonResponse
     {
-        $this->checkPermission(Permissions::PRODUCT_LIST->value);
         $result = $this->listService->run($filter);
         return HttpResponse::ok($result);
     }
 
     public function store(StoreProductRequest $request): JsonResponse
     {
-//        $this->checkPermission(Permissions::PRODUCT_STORE->value);
         $this->storeService->run($request->validated());
         return HttpResponse::created([]);
     }
