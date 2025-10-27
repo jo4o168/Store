@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Enum\ProductType;
 use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProductRequest extends BaseRequest
 {
@@ -11,9 +13,11 @@ class StoreProductRequest extends BaseRequest
         return [
             'name' => ['required', 'string'],
             'description' => ['sometimes', 'nullable', 'string'],
-            'image' => ['sometimes', 'nullable', 'string'],
-            'sku' => ['required', 'string'],
-            'category_id' => ['required', 'integer', 'exists:product_categories,id'],
+            'type' => ['required', Rule::enum(ProductType::class)],
+            'stock' => ['required', 'integer'],
+            'price' => ['sometimes', 'numeric'],
+            'active' => ['sometimes', 'boolean'],
+            'contact_id' => ['required', 'integer', 'exists:contacts,id'],
         ];
     }
 }
