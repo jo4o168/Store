@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enum\Permissions;
 use App\Http\Filters\Filter\DefaultFilter;
 use App\Http\Helpers\HttpResponse;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Http\Resources\Products\ListProductResource;
+use App\Http\Resources\Products\ShowProductResource;
 use App\Http\Services\Product\DeleteProductService;
 use App\Http\Services\Product\ListProductService;
 use App\Http\Services\Product\ShowProductService;
@@ -33,7 +34,7 @@ ProductController extends Controller
     public function index(DefaultFilter $filter): JsonResponse
     {
         $result = $this->listService->run($filter);
-        return HttpResponse::ok($result);
+        return HttpResponse::ok(ListProductResource::collection($result));
     }
 
     public function store(StoreProductRequest $request): JsonResponse
@@ -45,7 +46,7 @@ ProductController extends Controller
     public function show(Product $product): JsonResponse
     {
         $result = $this->showService->run($product);
-        return HttpResponse::ok($result);
+        return HttpResponse::ok(new ShowProductResource($result));
     }
 
     public function update(UpdateProductRequest $request, Product $product): Response
