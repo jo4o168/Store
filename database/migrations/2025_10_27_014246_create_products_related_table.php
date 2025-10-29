@@ -10,6 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username');
+            $table->boolean('active')->default(true);
+            $table->softDeletes();
+        });
+
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
@@ -27,12 +33,6 @@ return new class extends Migration {
             $table->integer('linkedin')->nullable();
             $table->date('birthdate')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('username');
-            $table->boolean('active')->default(true);
             $table->softDeletes();
         });
 
