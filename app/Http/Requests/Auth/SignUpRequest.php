@@ -9,9 +9,19 @@ class SignUpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'confirmed'],
+            "username" => ["required", "unique:users"],
+            "email" => ["required", "email", "unique:users"],
+            "name" => ["required", "string"],
+            "password" => [
+                "required",
+                'confirmed',
+                "min:8",
+                "max:64",
+                "regex:/[a-z]/",
+                "regex:/[A-Z]/",
+                "regex:/[0-9]/",
+                "regex:/[@$!%*#?&]/",
+            ]
         ];
     }
 }
