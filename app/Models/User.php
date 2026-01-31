@@ -26,6 +26,7 @@ class User extends Authenticatable
         'active',
         'master',
         'remember_token',
+        'active',
     ];
 
     protected $casts = [
