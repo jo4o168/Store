@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Product;
 
-use App\Enum\ProductType;
+use App\Enum\UnitEggs;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,11 +13,12 @@ class StoreProductRequest extends BaseRequest
         return [
             'name' => ['required', 'string'],
             'description' => ['sometimes', 'nullable', 'string'],
-            'type' => ['required', Rule::enum(ProductType::class)],
-            'stock' => ['required', 'integer'],
-            'price' => ['sometimes', 'numeric'],
-            'active' => ['sometimes', 'boolean'],
-            'contact_id' => ['required', 'integer', 'exists:contacts,id'],
+            'stock_quantity' => ['sometimes', 'integer'],
+            'unit' => ['sometimes', 'integer', Rule::enum(UnitEggs::class)],
+            'price' => ['required', 'numeric'],
+            'is_active' => ['sometimes', 'boolean'],
+            'image_url' => ['sometimes', 'nullable', 'string'],
+            'producer_id' => ['required', 'integer', 'exists:profiles,id'],
         ];
     }
 }

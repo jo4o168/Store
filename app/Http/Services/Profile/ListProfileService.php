@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Services\Contact;
+namespace App\Http\Services\Profile;
 
 use App\Http\Filters\Filter\DefaultFilter;
-use App\Models\Contact;
+use App\Models\Profile;
 
-class ListContactService
+class ListProfileService
 {
     public function run(DefaultFilter $filter)
     {
-        $model = new Contact();
+        $model = new Profile();
         return $model->filterBy($filter)->get();
     }
 }
