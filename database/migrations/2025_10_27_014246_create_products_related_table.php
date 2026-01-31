@@ -48,12 +48,12 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('products');
+        Schema::dropIfExists('profiles');
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('username');
             $table->dropColumn('active');
             $table->dropSoftDeletes();
         });
-        Schema::dropIfExists('products');
-        Schema::dropIfExists('profiles');
     }
 };
