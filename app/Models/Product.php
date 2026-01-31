@@ -7,26 +7,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property string $description
  * @property string $name
- * @property int $type
- * @property int $stock
  * @property float $price
- * @property bool $active
- * @property Contact $contact
+ * @property Profile $producer
+ * @property bool $is_active
+ * @property string $image_url
+ * @property int $stock_quantity
+ * @property int $unit
  */
 class Product extends BaseModel
 {
     protected $fillable = [
         'name',
         'description',
-        'type',
-        'stock',
+        'stock_quantity',
+        'unit',
         'price',
-        'active',
-        'contact_id',
+        'image_url',
+        'is_active',
+        'producer_id',
     ];
 
-    public function contact(): BelongsTo
+    public function producer(): BelongsTo
     {
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(Profile::class, 'producer_id');
     }
 }

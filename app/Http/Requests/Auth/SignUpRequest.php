@@ -12,7 +12,16 @@ class SignUpRequest extends FormRequest
             "username" => ["required", "unique:users"],
             "email" => ["required", "email", "unique:users"],
             "name" => ["required", "string"],
-            "password" => ["required", "min:8", "confirmed"],
+            "password" => [
+                "required",
+                'confirmed',
+                "min:8",
+                "max:64",
+                "regex:/[a-z]/",
+                "regex:/[A-Z]/",
+                "regex:/[0-9]/",
+                "regex:/[@$!%*#?&]/",
+            ]
         ];
     }
 }

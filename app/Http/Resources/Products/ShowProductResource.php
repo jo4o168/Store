@@ -10,20 +10,20 @@ class ShowProductResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        /**@var Product $data */
-        $data = $this;
+        /**@var Product $this */
 
         return [
-            'id' => $data->id,
-            'name' => $data->name,
-            'description' => $data->description,
-            'type' => $data->type,
-            'stock' => $data->stock,
-            'price' => $data->price,
-            'active' => $data->active,
-            'contact' => [
-                $data->contact->id,
-                $data->contact->full_name
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'stock_quantity' => $this->stock_quantity,
+            'unit' => $this->unit,
+            'price' => $this->price,
+            'active' => $this->is_active,
+            'image_url' => $this->image_url,
+            'producer' => [
+                $this->producer->id,
+                $this->producer->name
             ]
         ];
     }

@@ -16,22 +16,14 @@ return new class extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->string('full_name')->nullable();
-            $table->string('nickname')->nullable();
-            $table->string('email')->nullable();
-            $table->string('document')->nullable();
-            $table->integer('gender')->nullable();
-            $table->integer('type');
-            $table->integer('profile_picture')->nullable();
-            $table->integer('site')->nullable();
-            $table->integer('instagram')->nullable();
-            $table->integer('facebook')->nullable();
-            $table->integer('linkedin')->nullable();
-            $table->date('birthdate')->nullable();
+            $table->string('name');
+            $table->integer('role')->default(0);
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->text('avatar_url')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -40,12 +32,14 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->integer('type');
-            $table->integer('stock');
-            $table->decimal('price')->default(0);
-            $table->boolean('active')->default(true);
-            $table->foreignId('contact_id')->constrained('contacts');
+            $table->decimal('price', 10, 2);
+            $table->integer('unit')->default(0);
+            $table->integer('stock_quantity')->default(0);
+            $table->text('image_url')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('producer_id')->constrained('profiles');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -55,7 +49,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('products');
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('profiles');
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('username');
             $table->dropColumn('active');
