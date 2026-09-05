@@ -17,6 +17,7 @@ class OrderDetailResource extends JsonResource
             'total_amount' => (float) $this->total_amount,
             'delivery_address' => $this->delivery_address,
             'notes' => $this->notes,
+            'producer_message' => $this->producer_message,
             'producer_id' => (int) $this->producer_id,
             'customer_id' => (int) $this->customer_id,
             'customer' => $this->customer ? [

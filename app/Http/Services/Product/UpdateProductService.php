@@ -21,24 +21,10 @@ class UpdateProductService
             $data['image_url'] = $this->storeImage($image);
         }
 
-        $allowSubscription = array_key_exists('allow_subscription', $data)
-            ? (bool) $data['allow_subscription']
-            : (bool) $product->allow_subscription;
-        $allowOneTimePurchase = array_key_exists('allow_one_time_purchase', $data)
-            ? (bool) $data['allow_one_time_purchase']
-            : (bool) $product->allow_one_time_purchase;
-
-        if (!$allowSubscription && !$allowOneTimePurchase) {
-            abort(422, 'Selecione ao menos uma modalidade de venda.');
-        }
-
-        $data['allow_subscription'] = $allowSubscription;
-        $data['allow_one_time_purchase'] = $allowOneTimePurchase;
+        unset($data['allow_subscription'], $data['allow_one_time_purchase'], $data['subscription_price']);
 
         if (array_key_exists('one_time_price', $data) && $data['one_time_price'] !== null) {
             $data['price'] = (float) $data['one_time_price'];
-        } elseif (array_key_exists('subscription_price', $data) && $data['subscription_price'] !== null) {
-            $data['price'] = (float) $data['subscription_price'];
         }
 
         $product->fill($data);

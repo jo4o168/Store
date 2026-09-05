@@ -17,6 +17,8 @@ class ProducerStatsController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        return HttpResponse::ok(new ProducerStatsResource($this->service->run($request->user())));
+        return HttpResponse::ok(
+            (new ProducerStatsResource($this->service->run($request->user())))->resolve($request)
+        );
     }
 }

@@ -29,6 +29,10 @@ if [ "${SEED_DATABASE:-false}" = "true" ]; then
     php artisan db:seed --force --no-interaction
 fi
 
+if [ "${ENSURE_TEST_ACCOUNTS:-true}" = "true" ]; then
+    php artisan db:seed --class=TestAccountsSeeder --force --no-interaction
+fi
+
 if [ "$#" -gt 0 ]; then
     exec "$@"
 fi

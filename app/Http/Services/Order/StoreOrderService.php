@@ -13,12 +13,23 @@ class StoreOrderService
 {
     public function run(array $data, User $user): Order
     {
+        $user->loadMissing('profile');
         $product = Product::query()->findOrFail((int) $data['product_id']);
         abort_unless($product->is_active, 422, 'Este kit de ovos não está disponível.');
-        abort_unless((bool) $product->allow_one_time_purchase, 422, 'Este kit não aceita compra única.');
+
+        $isSubscription = ! empty($data['subscription_id']);
+        if ($isSubscription) {
+            abort_unless((bool) $product->allow_subscription, 422, 'Este kit não aceita assinatura.');
+        } else {
+            abort_unless((bool) $product->allow_one_time_purchase, 422, 'Este kit não aceita compra única.');
+        }
 
         $quantity = max((int) ($data['quantity'] ?? 1), 1);
-        $unitPrice = (float) ($product->one_time_price ?? $product->price);
+        $unitPrice = isset($data['unit_price'])
+            ? (float) $data['unit_price']
+            : (float) ($isSubscription
+                ? ($product->subscription_price ?? $product->price)
+                : ($product->one_time_price ?? $product->price));
 
         return DB::transaction(function () use ($data, $user, $product, $quantity, $unitPrice) {
             $order = Order::create([
@@ -29,6 +40,7 @@ class StoreOrderService
                 'total_amount' => $unitPrice * $quantity,
                 'customer_id' => $user->profile->id,
                 'producer_id' => $product->producer_id,
+                'subscription_id' => $data['subscription_id'] ?? null,
             ]);
 
             OrderItem::create([

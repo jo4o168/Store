@@ -10,16 +10,17 @@ class ListOrderService
 {
     public function run(User $user): Collection
     {
-        $profileId = $user->profile->id;
-        $role = is_array($user->roles) ? (int) ($user->roles[0] ?? 0) : (int) $user->roles;
+        $user->loadMissing('profile');
+        $profileId = (int) $user->profile->id;
 
-        $query = Order::query()->with(['customer:id,name', 'subscription.subscriptionPlan.producer:id,name']);
+        $query = Order::query()->with([
+            'items',
+            'customer:id,name,email',
+            'subscription.subscriptionPlan:id,name,producer_id',
+        ]);
 
-        if ($role === 1) {
-            $query->where(function ($w) use ($profileId) {
-                $w->where('producer_id', $profileId)
-                    ->orWhereHas('items.product', fn ($q) => $q->where('producer_id', $profileId));
-            });
+        if ($user->isProducer()) {
+            $query->forProducer($profileId);
         } else {
             $query->where('customer_id', $profileId);
         }

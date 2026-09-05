@@ -17,6 +17,7 @@ class Profile extends BaseModel
         'phone',
         'cpf',
         'address',
+        'address_number',
         'city',
         'state',
         'zip_code',

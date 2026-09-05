@@ -32,6 +32,9 @@ class UpsertCartItemService
             $plan = SubscriptionPlan::query()->findOrFail($planId);
             abort_unless($plan->is_active, 422, 'Este plano não está disponível.');
             abort_unless((int) $plan->producer_id === (int) $product->producer_id, 422, 'O plano não pertence a este produtor.');
+            if ($plan->product_id) {
+                abort_unless((int) $plan->product_id === (int) $product->id, 422, 'Este plano não pertence a este kit.');
+            }
             $quantity = 1;
         }
 

@@ -34,8 +34,10 @@ class PublicCatalogController extends Controller
     public function plans(Request $request): JsonResponse
     {
         $plans = SubscriptionPlan::query()
+            ->with(['product:id,name,kit_quantity,egg_size,egg_color,allow_one_time_purchase,image_url,producer_id'])
             ->where('is_active', true)
             ->when($request->filled('producer_id'), fn ($q) => $q->where('producer_id', (int) $request->input('producer_id')))
+            ->when($request->filled('product_id'), fn ($q) => $q->where('product_id', (int) $request->input('product_id')))
             ->get();
 
         return HttpResponse::ok($plans);

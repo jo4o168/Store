@@ -29,7 +29,7 @@ class OrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         $result = $this->listService->run($request->user());
-        return HttpResponse::ok(OrderResource::collection($result));
+        return HttpResponse::ok(OrderResource::collection($result)->resolve($request));
     }
 
     public function show(Request $request, Order $order): JsonResponse
@@ -47,7 +47,7 @@ class OrderController extends Controller
 
     public function update(UpdateOrderStatusRequest $request, Order $order): Response
     {
-        $this->updateStatusService->run($order, $request->validated('status'), $request->user());
+        $this->updateStatusService->run($order, $request->validated(), $request->user());
         return HttpResponse::noContent();
     }
 }

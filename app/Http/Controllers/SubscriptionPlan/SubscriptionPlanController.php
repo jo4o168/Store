@@ -36,7 +36,10 @@ class SubscriptionPlanController extends Controller
 
     public function store(StoreSubscriptionPlanRequest $request)
     {
-        $this->storeService->run($request->validated(), $request->user());
+        $payload = $request->validated();
+        $payload['image'] = $request->file('image');
+
+        $this->storeService->run($payload, $request->user());
         return HttpResponse::noContent();
     }
 
@@ -48,7 +51,10 @@ class SubscriptionPlanController extends Controller
 
     public function update(UpdateSubscriptionPlanRequest $request, SubscriptionPlan $subscriptionPlan)
     {
-        $this->updateService->run($request->validated(), $subscriptionPlan, $request->user());
+        $payload = $request->validated();
+        $payload['image'] = $request->file('image');
+
+        $this->updateService->run($payload, $subscriptionPlan, $request->user());
         return HttpResponse::noContent();
     }
 

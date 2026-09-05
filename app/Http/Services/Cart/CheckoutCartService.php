@@ -24,6 +24,11 @@ class CheckoutCartService
      */
     public function run(array $data, User $user): array
     {
+        $requirementErrors = CheckoutRequirements::errors($data);
+        if ($requirementErrors !== []) {
+            throw ValidationException::withMessages($requirementErrors);
+        }
+
         $customerId = (int) $user->profile->id;
         $pmId = isset($data['payment_method_id']) ? (int) $data['payment_method_id'] : null;
 
@@ -76,12 +81,25 @@ class CheckoutCartService
                     abort_if(! $plan, 422, 'Plano de assinatura inválido no carrinho.');
                     abort_unless($plan->is_active, 422, 'Plano não disponível.');
                     abort_unless((int) $plan->producer_id === (int) $product->producer_id, 422, 'Plano incompatível com o produto.');
+                    if ($plan->product_id) {
+                        abort_unless((int) $plan->product_id === (int) $product->id, 422, 'Este plano não pertence a este kit.');
+                    }
 
                     $sub = $this->storeSubscription->run([
                         'subscription_plan_id' => $plan->id,
                         'payment_method_id' => $pmId,
                     ], $user);
                     $subscriptionIds[] = $sub->id;
+
+                    $order = $this->storeOrder->run([
+                        'product_id' => $product->id,
+                        'quantity' => max(1, (int) $item->quantity),
+                        'delivery_address' => $data['delivery_address'] ?? null,
+                        'notes' => $data['notes'] ?? null,
+                        'subscription_id' => $sub->id,
+                        'unit_price' => (float) $plan->price,
+                    ], $user);
+                    $orderIds[] = $order->id;
                 }
             }
 

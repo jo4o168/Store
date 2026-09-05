@@ -10,11 +10,13 @@ class ListSubscriptionPlanService
 {
     public function run(DefaultFilter $filter, User $user)
     {
-        $profileId = $user->profile->id;
-        $role = is_array($user->roles) ? (int) ($user->roles[0] ?? 0) : (int) $user->roles;
+        $user->loadMissing('profile');
+        $profileId = (int) $user->profile->id;
 
         return SubscriptionPlan::query()
-            ->when($role === 1, fn ($q) => $q->where('producer_id', $profileId))
+            ->with(['product:id,name,kit_quantity,egg_size,egg_color,allow_one_time_purchase,image_url,producer_id'])
+            ->when($user->isProducer(), fn ($q) => $q->where('producer_id', $profileId))
+            ->latest()
             ->get();
     }
 }

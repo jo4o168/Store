@@ -3,6 +3,7 @@
 namespace App\Http\Services\Stats;
 
 use App\Enum\OrderStatus;
+use App\Enum\SubscriptionStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Subscription;
@@ -12,15 +13,15 @@ class GetProducerStatsService
 {
     public function run(User $user): array
     {
-        $profileId = $user->profile->id;
+        $user->loadMissing('profile');
+        $profileId = (int) $user->profile->id;
 
         $productsCount = Product::query()
             ->where('producer_id', $profileId)
             ->where('is_active', true)
             ->count();
 
-        $producerOrders = Order::query()
-            ->whereHas('subscription.subscriptionPlan', fn ($q) => $q->where('producer_id', $profileId));
+        $producerOrders = Order::query()->forProducer($profileId);
 
         $pendingOrdersCount = (clone $producerOrders)
             ->where('status', OrderStatus::PENDING->value)
@@ -32,6 +33,7 @@ class GetProducerStatsService
 
         $subscribersCount = Subscription::query()
             ->whereHas('subscriptionPlan', fn ($q) => $q->where('producer_id', $profileId))
+            ->where('status', SubscriptionStatus::ACTIVE->value)
             ->count();
 
         return [

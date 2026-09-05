@@ -17,10 +17,26 @@ class CheckoutCartRequest extends BaseRequest
 
     public function rules(): array
     {
+        $customerId = $this->user()?->profile?->id;
+
         return [
-            'delivery_address' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'delivery_address' => ['required', 'string', 'min:10', 'max:2000'],
             'notes' => ['sometimes', 'nullable', 'string', 'max:2000'],
-            'payment_method_id' => ['sometimes', 'nullable', 'integer', Rule::exists('payment_methods', 'id')->where('customer_id', $this->user()->profile->id)],
+            'payment_method_id' => [
+                'required',
+                'integer',
+                Rule::exists('payment_methods', 'id')->where('customer_id', $customerId),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'delivery_address.required' => 'Informe o endereço completo de entrega.',
+            'delivery_address.min' => 'Informe o endereço completo de entrega, com rua, cidade e CEP.',
+            'payment_method_id.required' => 'Selecione um método de pagamento para confirmar o pedido.',
+            'payment_method_id.exists' => 'O método de pagamento selecionado é inválido.',
         ];
     }
 }

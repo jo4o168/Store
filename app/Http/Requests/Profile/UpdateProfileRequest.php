@@ -17,6 +17,7 @@ class UpdateProfileRequest extends BaseRequest
             'phone' => ['sometimes', 'string', 'nullable'],
             'cpf' => ['sometimes', 'string', 'nullable'],
             'address' => ['sometimes', 'string', 'nullable'],
+            'address_number' => ['sometimes', 'string', 'nullable', 'max:20'],
             'city' => ['sometimes', 'string', 'nullable'],
             'state' => ['sometimes', 'string', 'nullable'],
             'zip_code' => ['sometimes', 'string', 'nullable'],

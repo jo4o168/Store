@@ -9,20 +9,16 @@ class ShowOrderService
 {
     public function run(Order $order, User $user): Order
     {
+        $user->loadMissing('profile');
         $profileId = (int) $user->profile->id;
-        $role = is_array($user->roles) ? (int) ($user->roles[0] ?? 0) : (int) $user->roles;
 
-        if ($role === 0) {
+        if ($user->isClient()) {
             abort_unless((int) $order->customer_id === $profileId, 403);
         } else {
-            $orderProducerId = (int) ($order->producer_id ?? 0);
-            $isOwnerProducer = $orderProducerId === $profileId
-                || $order->items()->whereHas('product', fn ($q) => $q->where('producer_id', $profileId))->exists()
-                || $order->subscription()
-                    ->whereHas('subscriptionPlan', fn ($q) => $q->where('producer_id', $profileId))
-                    ->exists();
-
-            abort_unless($isOwnerProducer, 403);
+            abort_unless(
+                Order::query()->whereKey($order->id)->forProducer($profileId)->exists(),
+                403
+            );
         }
 
         return $order->load([

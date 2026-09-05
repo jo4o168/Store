@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $description
@@ -44,6 +45,11 @@ class Product extends BaseModel
     public function producer(): BelongsTo
     {
         return $this->belongsTo(Profile::class, 'producer_id');
+    }
+
+    public function subscriptionPlans(): HasMany
+    {
+        return $this->hasMany(SubscriptionPlan::class);
     }
 
     protected function casts(): array
